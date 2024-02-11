@@ -32,20 +32,20 @@ public class App extends Application {
         BorderPane mainPane = new BorderPane();
         
         //Setting the grid
-        GridPane grid = new Grid();
+        Grid grid = new Grid();
+        grid.init();
 
         // Right hand side
-        VBox right = new RightPane();
-        
+        RightPane right = new RightPane();
         
         VBox left = new VBox();
         left.setPrefWidth(250);
         left.setSpacing(15);
         
-        
         mainPane.setCenter(grid);
         mainPane.setRight(right);
         mainPane.setLeft(left);
+        mainPane.setStyle("-fx-background-color: #2a2a2a;");
         
         Scene scene = new Scene(mainPane, 1100, 700);
         

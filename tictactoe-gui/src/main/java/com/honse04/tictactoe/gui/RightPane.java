@@ -17,36 +17,35 @@ public class RightPane extends VBox {
     
     public RightPane() {
         setPrefWidth(250);
-        setSpacing(5);
-        
+        setSpacing(2);
+   
         // Horizontal Spacing for the label(right)    
         HBox labelContainer = new HBox();
         labelContainer.setSpacing(20);
         HBox labelSpacing = new HBox();
         labelSpacing.setPrefWidth(10);
         
-        Label turnLabel = new Label("   Current Turn   ");
+        Label turnLabel = new Label("  Current Turn   ");
         turnLabel.setFont(new Font("Calibri", 30));
-        turnLabel.setStyle("-fx-background-color: #333333; -fx-background-radius: 20; -fx-text-fill: white");
+        turnLabel.setStyle("-fx-text-fill: white;");
         labelContainer.getChildren().addAll(labelSpacing, turnLabel);
         
         // Horizontal Spacing for turn display(right)
         HBox turnContainer = new HBox();
         turnContainer.setSpacing(20);
-
-//        turnContainer.setStyle("-fx-background-color: #2F4F4F;");
+        turnContainer.setPrefHeight(75);
         
         HBox turnLabelSpacing = new HBox();
         turnLabelSpacing.setPrefWidth(80);
         
         Label turn = new Label("X");
         turn.setFont(new Font("Arial", 70));
-//        turn.setStyle("-fx-background-color: #2F4F4F;");
+        turn.setStyle("-fx-text-fill: white;");
         turnContainer.getChildren().addAll(turnLabelSpacing, turn);
         
         //Vertical Spacing
         VBox spacing = new VBox();
-        spacing.setPrefHeight(200);
+        spacing.setPrefHeight(250);
         
         getChildren().addAll(spacing,labelContainer, turnContainer);
     }
