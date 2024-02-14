@@ -20,6 +20,7 @@ public class Grid extends GridPane {
     private final ArrayList<ArrayList<String>> gameBoard;
     private Button clicked = null;
     private int turnNumber = 1;
+    private boolean gameOver = false;
     
     public Grid() {  
         this.gameBoard = new ArrayList<>();
@@ -55,7 +56,9 @@ public class Grid extends GridPane {
                 button.setOnAction((ActionEvent e) -> {
                     //System.out.println(button.getId());
                     clicked = button;
-                    gameLogic(button.getId());
+                    if(!gameOver) {
+                       gameLogic(button.getId()); 
+                    }                  
                 });
                 
                 add(button,j,i); 
@@ -74,6 +77,7 @@ public class Grid extends GridPane {
         }
         
         String toPut = this.turnNumber%2 != 0 ? "X" : "O";
+        RightPane.changeText(toPut.equalsIgnoreCase("X") ? "O": "X");
         gameBoard.get(x).set(y, toPut);
         clicked.setText(toPut);
         turnNumber++;
@@ -84,19 +88,41 @@ public class Grid extends GridPane {
   
     }
     
-    public boolean checkState(){
+    public void checkState(){
+        
         for(ArrayList<String> row: gameBoard) {
-            if(row.get(0).equalsIgnoreCase(row.get(1)) && row.get(1).equalsIgnoreCase(row.get(2)) &&
+            if(!row.get(0).equalsIgnoreCase("") &&
+               row.get(0).equalsIgnoreCase(row.get(1)) && row.get(1).equalsIgnoreCase(row.get(2)) &&
                     row.get(0).equalsIgnoreCase(row.get(2))){
                 System.out.println(row.get(0));
-                return true;
+                gameOver = true;
             }
         }
         
         //need to check the columns
-//        for(int i = 0; i<3;i++){
-//            if(gameBoard.get())
-//        }
-        return false;
+        for(int i = 0; i<3;i++){
+            if(!gameBoard.get(0).get(i).equalsIgnoreCase("") &&
+                    gameBoard.get(0).get(i).equalsIgnoreCase(gameBoard.get(1).get(i)) &&
+                    gameBoard.get(1).get(i).equalsIgnoreCase(gameBoard.get(2).get(i)) &&
+                    gameBoard.get(0).get(i).equalsIgnoreCase(gameBoard.get(2).get(i))) {
+                gameOver = true;
+            }
+            
+        }
+        
+        if(!gameBoard.get(0).get(0).equalsIgnoreCase("") &&
+                gameBoard.get(0).get(0).equalsIgnoreCase(gameBoard.get(1).get(1))&&
+                gameBoard.get(1).get(1).equalsIgnoreCase(gameBoard.get(2).get(2))&&
+                gameBoard.get(0).get(0).equalsIgnoreCase(gameBoard.get(2).get(2))) {
+            gameOver = true;
+        }
+        
+        if(!gameBoard.get(0).get(2).equalsIgnoreCase("") &&
+                gameBoard.get(0).get(2).equalsIgnoreCase(gameBoard.get(1).get(1))&&
+                gameBoard.get(1).get(1).equalsIgnoreCase(gameBoard.get(2).get(0))&&
+                gameBoard.get(0).get(2).equalsIgnoreCase(gameBoard.get(2).get(0))) {
+            gameOver = true;
+        }
+        
     }
 }

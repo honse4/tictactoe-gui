@@ -14,6 +14,7 @@ import javafx.scene.text.Font;
  * @author vasav
  */
 public class RightPane extends VBox {
+    static Label MainLabel = new Label();
     
     public RightPane() {
         setPrefWidth(250);
@@ -39,6 +40,7 @@ public class RightPane extends VBox {
         turnLabelSpacing.setPrefWidth(80);
         
         Label turn = new Label("X");
+        RightPane.MainLabel = turn;
         turn.setFont(new Font("Arial", 70));
         turn.setStyle("-fx-text-fill: white;");
         turnContainer.getChildren().addAll(turnLabelSpacing, turn);
@@ -48,6 +50,10 @@ public class RightPane extends VBox {
         spacing.setPrefHeight(250);
         
         getChildren().addAll(spacing,labelContainer, turnContainer);
+    }
+    
+    public static void changeText(String text) {
+        MainLabel.setText(text);
     }
     
 }
