@@ -11,18 +11,22 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  *
  * @author vasav
  */
-public class Grid extends GridPane {
+public class Grid extends StackPane {
     private final ArrayList<ArrayList<String>> gameBoard;
     private Button clicked = null;
     private int turnNumber = 1;
-    private boolean gameOver = false;
+    private boolean isGameOver = false;
+    private GridPane grid;
     
     public Grid() {  
+        this.grid = new GridPane();
         this.gameBoard = new ArrayList<>();
         for(int i = 0; i<3; i++) {
             ArrayList<String> temp = new ArrayList<>(List.of("","",""));
@@ -31,39 +35,42 @@ public class Grid extends GridPane {
     }
     
     public void init() {
-        setGridLinesVisible(true);
-        setPrefSize(800, 700);
-        setHgap(7);
-        setVgap(7);
+        grid.setGridLinesVisible(true);
+        grid.setPrefSize(800, 700);
+        grid.setHgap(7);
+        grid.setVgap(7);
+        
+        isGameOver = false;
         
         for (int i = 0; i < 3; i++) {
             RowConstraints rowConstraints = new RowConstraints();
             rowConstraints.setPercentHeight(33.3);
-            getRowConstraints().add(rowConstraints);
+            grid.getRowConstraints().add(rowConstraints);
 
             ColumnConstraints columnConstraints = new ColumnConstraints();
             columnConstraints.setPercentWidth(33.3); 
-            getColumnConstraints().add(columnConstraints);
+            grid.getColumnConstraints().add(columnConstraints);
         }
         
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Button button = new Button("");
-                button.setStyle("-fx-background-color:  black; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;");
+                button.setStyle("-fx-background-color:  #2a2a2a; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;");
                 button.setId(String.format("%d,%d",i,j));
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 
                 button.setOnAction((ActionEvent e) -> {
                     //System.out.println(button.getId());
                     clicked = button;
-                    if(!gameOver) {
+                    if(!isGameOver) {
                        gameLogic(button.getId()); 
                     }                  
                 });
                 
-                add(button,j,i); 
+                grid.add(button,j,i); 
             }
         }
+        getChildren().add(grid);
     }
     
     public void gameLogic(String id) {
@@ -95,7 +102,7 @@ public class Grid extends GridPane {
                row.get(0).equalsIgnoreCase(row.get(1)) && row.get(1).equalsIgnoreCase(row.get(2)) &&
                     row.get(0).equalsIgnoreCase(row.get(2))){
                 System.out.println(row.get(0));
-                gameOver = true;
+                isGameOver = true;
             }
         }
         
@@ -105,7 +112,7 @@ public class Grid extends GridPane {
                     gameBoard.get(0).get(i).equalsIgnoreCase(gameBoard.get(1).get(i)) &&
                     gameBoard.get(1).get(i).equalsIgnoreCase(gameBoard.get(2).get(i)) &&
                     gameBoard.get(0).get(i).equalsIgnoreCase(gameBoard.get(2).get(i))) {
-                gameOver = true;
+                isGameOver = true;
             }
             
         }
@@ -114,15 +121,40 @@ public class Grid extends GridPane {
                 gameBoard.get(0).get(0).equalsIgnoreCase(gameBoard.get(1).get(1))&&
                 gameBoard.get(1).get(1).equalsIgnoreCase(gameBoard.get(2).get(2))&&
                 gameBoard.get(0).get(0).equalsIgnoreCase(gameBoard.get(2).get(2))) {
-            gameOver = true;
+            isGameOver = true;
         }
         
         if(!gameBoard.get(0).get(2).equalsIgnoreCase("") &&
                 gameBoard.get(0).get(2).equalsIgnoreCase(gameBoard.get(1).get(1))&&
                 gameBoard.get(1).get(1).equalsIgnoreCase(gameBoard.get(2).get(0))&&
                 gameBoard.get(0).get(2).equalsIgnoreCase(gameBoard.get(2).get(0))) {
-            gameOver = true;
+            isGameOver = true;
         }
         
+        if(isGameOver){
+            gameOver();
+        }
+        
+    }
+    public void gameOver() {
+        VBox alert = new VBox();
+        alert.setMaxSize(275, 175);
+        alert.setStyle("-fx-background-color: gray");
+        
+        Button reset = new Button("Play again");
+        reset.setOnAction((ActionEvent e) -> {
+            this.grid = new GridPane();
+            init();
+            
+            for(int i = 0; i<3; i++) {
+              for(int j =0; j<3; j++) {
+                gameBoard.get(i).set(j, "");
+              }
+            }
+            getChildren().remove(alert);
+        });
+        
+        alert.getChildren().add(reset);
+        getChildren().add(alert);
     }
 }

@@ -4,6 +4,7 @@
  */
 package com.honse04.tictactoe.gui;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -19,37 +20,28 @@ public class RightPane extends VBox {
     public RightPane() {
         setPrefWidth(250);
         setSpacing(2);
-   
-        // Horizontal Spacing for the label(right)    
-        HBox labelContainer = new HBox();
-        labelContainer.setSpacing(20);
-        HBox labelSpacing = new HBox();
-        labelSpacing.setPrefWidth(10);
-        
-        Label turnLabel = new Label("  Current Turn   ");
+        setAlignment(Pos.CENTER);
+           
+        Label turnLabel = new Label("   Current Turn   ");
         turnLabel.setFont(new Font("Calibri", 30));
-        turnLabel.setStyle("-fx-text-fill: white;");
-        labelContainer.getChildren().addAll(labelSpacing, turnLabel);
+        turnLabel.setStyle("-fx-text-fill: black;"
+                + " -fx-background-color: #F3F8FF; -fx-font-family: Calibri;"
+                + " -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, black, 10, 0.5, 1, 1);" );
         
-        // Horizontal Spacing for turn display(right)
-        HBox turnContainer = new HBox();
-        turnContainer.setSpacing(20);
-        turnContainer.setPrefHeight(75);
-        
-        HBox turnLabelSpacing = new HBox();
-        turnLabelSpacing.setPrefWidth(80);
         
         Label turn = new Label("X");
         RightPane.MainLabel = turn;
+        turn.setMinWidth(190);
+        turn.setAlignment(Pos.CENTER);
         turn.setFont(new Font("Arial", 70));
-        turn.setStyle("-fx-text-fill: white;");
-        turnContainer.getChildren().addAll(turnLabelSpacing, turn);
+        turn.setStyle("-fx-text-fill: black; -fx-background-color: #F3F8FF; -fx-background-radius: 10px;"
+                + " -fx-effect: dropshadow(three-pass-box, black, 10, 0.5, 1, 1);");
         
         //Vertical Spacing
         VBox spacing = new VBox();
         spacing.setPrefHeight(250);
         
-        getChildren().addAll(spacing,labelContainer, turnContainer);
+        getChildren().addAll(turnLabel, turn);
     }
     
     public static void changeText(String text) {
