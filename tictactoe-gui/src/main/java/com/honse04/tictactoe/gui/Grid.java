@@ -7,6 +7,7 @@ package com.honse04.tictactoe.gui;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -139,11 +140,21 @@ public class Grid extends StackPane {
     public void gameOver() {
         VBox alert = new VBox();
         alert.setMaxSize(275, 175);
-        alert.setStyle("-fx-background-color: gray");
+        alert.setStyle("-fx-background-color: #777777;-fx-background-radius: 10px;");
+        alert.setAlignment(Pos.CENTER);
         
         Button reset = new Button("Play again");
         reset.setOnAction((ActionEvent e) -> {
-            this.grid = new GridPane();
+            reset();
+            getChildren().remove(alert);
+        });
+        
+        alert.getChildren().add(reset);
+        getChildren().add(alert);
+    }
+    
+    public void reset() {
+        this.grid = new GridPane();
             init();
             
             for(int i = 0; i<3; i++) {
@@ -151,10 +162,7 @@ public class Grid extends StackPane {
                 gameBoard.get(i).set(j, "");
               }
             }
-            getChildren().remove(alert);
-        });
-        
-        alert.getChildren().add(reset);
-        getChildren().add(alert);
+            turnNumber = 1;
+            RightPane.changeText("X");
     }
 }

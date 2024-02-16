@@ -23,10 +23,8 @@ public class App extends Application {
 
         // Right hand side
         RightPane right = new RightPane();
-        
-        VBox left = new VBox();
-        left.setPrefWidth(250);
-        left.setSpacing(15);
+                
+        LeftPane left = new LeftPane(grid);
         
         mainPane.setCenter(grid);
         mainPane.setRight(right);
