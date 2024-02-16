@@ -27,7 +27,12 @@ public class LeftPane extends VBox{
             mainGrid.reset();
         });
         
-        getChildren().add(resetButton);
+        Button undoButton = new Button("Undo");
+        undoButton.setOnAction((ActionEvent e) -> {
+            mainGrid.undo();
+        });
+        
+        getChildren().addAll(resetButton, undoButton);
         
     }
 }

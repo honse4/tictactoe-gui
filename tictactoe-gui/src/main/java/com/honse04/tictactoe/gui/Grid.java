@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.Node;
 
 /**
  *
@@ -25,10 +26,12 @@ public class Grid extends StackPane {
     private int turnNumber = 1;
     private boolean isGameOver = false;
     private GridPane grid;
+    private DoublyLinkedList<ArrayList<ArrayList<String>>> gameData;
     
     public Grid() {  
         this.grid = new GridPane();
         this.gameBoard = new ArrayList<>();
+        this.gameData = new DoublyLinkedList();
         for(int i = 0; i<3; i++) {
             ArrayList<String> temp = new ArrayList<>(List.of("","",""));
             this.gameBoard.add(temp);
@@ -68,6 +71,8 @@ public class Grid extends StackPane {
                     }                  
                 });
                 
+                GridPane.setRowIndex(button, i);
+                GridPane.setColumnIndex(button, j);
                 grid.add(button,j,i); 
             }
         }
@@ -89,6 +94,8 @@ public class Grid extends StackPane {
         gameBoard.get(x).set(y, toPut);
         clicked.setText(toPut);
         turnNumber++;
+        
+        gameData.push(gameBoard);
         
         if(turnNumber>=5){
             checkState();
@@ -164,5 +171,30 @@ public class Grid extends StackPane {
             }
             turnNumber = 1;
             RightPane.changeText("X");
+    }
+    
+    public void undo() {
+        DoublyLinkedList.DoubleNode dn = gameData.getTop();
+        if(dn == null || dn.getNext() == null) {
+            System.out.println("how?");
+            return;
+        }
+
+        dn = dn.getNext();
+        gameData.setTop(dn);
+        ArrayList<ArrayList<String>> previous  = (ArrayList<ArrayList<String>>) dn.getValue();
+     
+        for(Node nd: grid.getChildren()) {
+            //System.out.println("Node type: " + nd.getClass().getSimpleName());
+            if (nd instanceof Button) {
+            Integer row = GridPane.getRowIndex(nd);
+            Integer column = GridPane.getColumnIndex(nd);
+            System.out.println(previous.get(row).get(column) + " " + row + ","+ column);
+            Button button = (Button) nd;
+            button.setText(previous.get(row).get(column)); 
+        }           
+            
+        }
+        
     }
 }
