@@ -66,8 +66,9 @@ public class DoublyLinkedList<T> {
         System.out.println("Bottom is : " + bottom.getValue());
     }
     
-    public void getSize() {
+    public int getSize() {
         System.out.println("Size is: " + size);
+        return size;
     }
     
     public void push(T val) {
@@ -140,6 +141,14 @@ public class DoublyLinkedList<T> {
                 newNode = newNode.getNext(); 
             }
         }
+    }
+    
+    public void clear() {
+        for(int i = 0; i<size; i++) {
+            pop();
+        }
+        
+        
     }
     
     

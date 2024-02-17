@@ -95,7 +95,12 @@ public class Grid extends StackPane {
         clicked.setText(toPut);
         turnNumber++;
         
-        gameData.push(gameBoard);
+        ArrayList<ArrayList<String>> copy = new ArrayList<>();
+        for(ArrayList<String> ar: gameBoard) {
+            ArrayList<String> newRow = new ArrayList<>(ar);
+            copy.add(newRow);
+        }
+        gameData.push(copy);
         
         if(turnNumber>=5){
             checkState();
@@ -171,30 +176,37 @@ public class Grid extends StackPane {
             }
             turnNumber = 1;
             RightPane.changeText("X");
+            gameData.clear();
     }
     
     public void undo() {
-        DoublyLinkedList.DoubleNode dn = gameData.getTop();
-        if(dn == null || dn.getNext() == null) {
+        
+        if(gameData.getSize() == 0) {
+            return;
+        }
+        
+        DoublyLinkedList.DoubleNode dn = gameData.getTop().getNext();
+        if(dn == null) {
             System.out.println("how?");
             return;
         }
-
-        dn = dn.getNext();
+        gameData.getList();
         gameData.setTop(dn);
         ArrayList<ArrayList<String>> previous  = (ArrayList<ArrayList<String>>) dn.getValue();
      
         for(Node nd: grid.getChildren()) {
-            //System.out.println("Node type: " + nd.getClass().getSimpleName());
             if (nd instanceof Button) {
-            Integer row = GridPane.getRowIndex(nd);
-            Integer column = GridPane.getColumnIndex(nd);
-            System.out.println(previous.get(row).get(column) + " " + row + ","+ column);
-            Button button = (Button) nd;
-            button.setText(previous.get(row).get(column)); 
-        }           
-            
+              Integer row = GridPane.getRowIndex(nd);
+              Integer column = GridPane.getColumnIndex(nd);
+
+              Button button = (Button) nd;
+              button.setText(previous.get(row).get(column));
+             gameBoard.get(row).set(column, previous.get(row).get(column));
+            }                    
         }
+        turnNumber--;
+        String toPut = this.turnNumber%2 != 0 ? "X" : "O";
+        RightPane.changeText(toPut);
         
     }
 }
