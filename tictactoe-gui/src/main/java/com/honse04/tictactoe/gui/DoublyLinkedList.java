@@ -50,6 +50,10 @@ public class DoublyLinkedList<T> {
         this.top = dn;
     }
     
+    public void setSize(int change) {
+        size += change;
+    }
+    
     public DoubleNode getTop() {
         if(top == null || bottom == null){
             System.out.println("No values in the list");        
@@ -92,9 +96,11 @@ public class DoublyLinkedList<T> {
         if(top!=null) {
             System.out.println("Popped: "+ top.getValue());
             top = top.getNext();
-            top.setPrevious(null);
-            size--;
             
+            if(top != null) {
+                top.setPrevious(null);
+            }           
+            size--;         
             return;
         }   
         System.out.println("No values in the list");
@@ -144,7 +150,9 @@ public class DoublyLinkedList<T> {
     }
     
     public void clear() {
-        for(int i = 0; i<size; i++) {
+        int val = size;
+        for(int i = 0; i<val; i++) {
+            System.out.println(i);
             pop();
         }
         

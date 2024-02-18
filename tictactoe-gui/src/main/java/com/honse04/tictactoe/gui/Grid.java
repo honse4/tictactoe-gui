@@ -102,6 +102,11 @@ public class Grid extends StackPane {
         }
         gameData.push(copy);
         
+        if(turnNumber >= 10){
+            gameOver();
+            return;
+        }
+        
         if(turnNumber>=5){
             checkState();
         }
@@ -119,7 +124,6 @@ public class Grid extends StackPane {
             }
         }
         
-        //need to check the columns
         for(int i = 0; i<3;i++){
             if(!gameBoard.get(0).get(i).equalsIgnoreCase("") &&
                     gameBoard.get(0).get(i).equalsIgnoreCase(gameBoard.get(1).get(i)) &&
@@ -167,16 +171,16 @@ public class Grid extends StackPane {
     
     public void reset() {
         this.grid = new GridPane();
-            init();
+        init();
             
-            for(int i = 0; i<3; i++) {
-              for(int j =0; j<3; j++) {
-                gameBoard.get(i).set(j, "");
-              }
+        for(int i = 0; i<3; i++) {
+            for(int j =0; j<3; j++) {
+               gameBoard.get(i).set(j, "");
             }
-            turnNumber = 1;
-            RightPane.changeText("X");
-            gameData.clear();
+        }
+        turnNumber = 1;
+        RightPane.changeText("X");
+        gameData.clear();
     }
     
     public void undo() {
@@ -186,12 +190,26 @@ public class Grid extends StackPane {
         }
         
         DoublyLinkedList.DoubleNode dn = gameData.getTop().getNext();
-        if(dn == null) {
-            System.out.println("how?");
-            return;
-        }
+        
         gameData.getList();
         gameData.setTop(dn);
+        turnNumber--;
+        
+        if(dn == null) {
+            for(Node nd: grid.getChildren()) {
+               if (nd instanceof Button) {
+                  Integer row = GridPane.getRowIndex(nd);
+                  Integer column = GridPane.getColumnIndex(nd);
+
+                  Button button = (Button) nd;
+                  button.setText("");
+                  gameBoard.get(row).set(column, "");
+                }                    
+            }
+            gameData.setSize(-1);
+            return;
+        }
+        
         ArrayList<ArrayList<String>> previous  = (ArrayList<ArrayList<String>>) dn.getValue();
      
         for(Node nd: grid.getChildren()) {
@@ -204,9 +222,13 @@ public class Grid extends StackPane {
              gameBoard.get(row).set(column, previous.get(row).get(column));
             }                    
         }
-        turnNumber--;
+        gameData.setSize(-1);
         String toPut = this.turnNumber%2 != 0 ? "X" : "O";
         RightPane.changeText(toPut);
+             
+    }
+    
+    public void redo() {
         
     }
 }

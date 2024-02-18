@@ -5,7 +5,6 @@
 package com.honse04.tictactoe.gui;
 
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -30,6 +29,11 @@ public class LeftPane extends VBox{
         Button undoButton = new Button("Undo");
         undoButton.setOnAction((ActionEvent e) -> {
             mainGrid.undo();
+        });
+        
+        Button redoButton = new Button("Redo");
+        redoButton.setOnAction((ActionEvent e) -> {
+            mainGrid.redo();
         });
         
         getChildren().addAll(resetButton, undoButton);
