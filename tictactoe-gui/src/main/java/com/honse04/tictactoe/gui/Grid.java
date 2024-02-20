@@ -4,8 +4,13 @@
  */
 package com.honse04.tictactoe.gui;
 
+import com.honse04.tictactoe.gui.data.DoublyLinkedList;
+import javafx.util.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -15,6 +20,8 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
+import javafx.scene.effect.BoxBlur;
+import javafx.scene.layout.BorderPane;
 
 /**
  *
@@ -26,16 +33,23 @@ public class Grid extends StackPane {
     private int turnNumber = 1;
     private boolean isGameOver = false;
     private GridPane grid;
-    private DoublyLinkedList<ArrayList<ArrayList<String>>> gameData;
+    private final DoublyLinkedList<ArrayList<ArrayList<String>>> gameData;
     
     public Grid() {  
         this.grid = new GridPane();
         this.gameBoard = new ArrayList<>();
         this.gameData = new DoublyLinkedList();
+        
+        ArrayList<ArrayList<String>> addBase = new ArrayList<>();
+        
         for(int i = 0; i<3; i++) {
             ArrayList<String> temp = new ArrayList<>(List.of("","",""));
             this.gameBoard.add(temp);
+            
+            ArrayList<String> temp2 = new ArrayList<>(List.of("","",""));
+            addBase.add(temp2);
         }      
+        gameData.push(addBase);
     }
     
     public void init() {
@@ -150,23 +164,36 @@ public class Grid extends StackPane {
         
         if(isGameOver){
             gameOver();
-        }
-        
+        }       
     }
+    
     public void gameOver() {
+        BoxBlur blur = new BoxBlur(5,5,1);
+        grid.setEffect(blur);
+        
         VBox alert = new VBox();
         alert.setMaxSize(275, 175);
         alert.setStyle("-fx-background-color: #777777;-fx-background-radius: 10px;");
         alert.setAlignment(Pos.CENTER);
-        
+        alert.setOpacity(0);
+         
         Button reset = new Button("Play again");
         reset.setOnAction((ActionEvent e) -> {
             reset();
             getChildren().remove(alert);
+            grid.setEffect(null);
         });
+        
+         
+        // changes to the blurring area, and scaling/opacity for the animatio
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(alert.opacityProperty(),0)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(alert.opacityProperty(), 1))
+        );
         
         alert.getChildren().add(reset);
         getChildren().add(alert);
+        timeline.play();
     }
     
     public void reset() {
@@ -185,7 +212,7 @@ public class Grid extends StackPane {
     
     public void undo() {
         
-        if(gameData.getSize() == 0) {
+        if(gameData.getSize() == 1) {
             return;
         }
         
@@ -194,21 +221,6 @@ public class Grid extends StackPane {
         gameData.getList();
         gameData.setTop(dn);
         turnNumber--;
-        
-        if(dn == null) {
-            for(Node nd: grid.getChildren()) {
-               if (nd instanceof Button) {
-                  Integer row = GridPane.getRowIndex(nd);
-                  Integer column = GridPane.getColumnIndex(nd);
-
-                  Button button = (Button) nd;
-                  button.setText("");
-                  gameBoard.get(row).set(column, "");
-                }                    
-            }
-            gameData.setSize(-1);
-            return;
-        }
         
         ArrayList<ArrayList<String>> previous  = (ArrayList<ArrayList<String>>) dn.getValue();
      
@@ -229,6 +241,32 @@ public class Grid extends StackPane {
     }
     
     public void redo() {
+        
+        DoublyLinkedList.DoubleNode dn = gameData.getTop().getPrevious();
+        
+        if(dn == null) {
+            return;
+        }
+        
+        gameData.setTop(dn);
+        gameData.getList();
+        ArrayList<ArrayList<String>> prev = (ArrayList<ArrayList<String>>) dn.getValue();
+        
+        for(Node nd: grid.getChildren()) {
+            if(nd instanceof Button) {
+                Button btn = (Button) nd;
+                
+                Integer row = GridPane.getRowIndex(nd);
+                Integer col = GridPane.getColumnIndex(nd);
+                
+                btn.setText(prev.get(row).get(col));
+                gameBoard.get(row).set(col, prev.get(row).get(col));
+            }
+        }
+        turnNumber++;
+        gameData.setSize(1);
+        String toPut = this.turnNumber%2 != 0 ? "X" : "O";
+        RightPane.changeText(toPut);
         
     }
 }

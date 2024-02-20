@@ -17,7 +17,7 @@ public class App extends Application {
         BorderPane mainPane = new BorderPane();
         
         //Setting the grid
-        Grid grid = new Grid();
+        Grid grid = new Grid(mainPane);
         grid.init();
 
         // Right hand side

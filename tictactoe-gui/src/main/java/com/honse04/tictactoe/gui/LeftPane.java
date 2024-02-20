@@ -36,7 +36,7 @@ public class LeftPane extends VBox{
             mainGrid.redo();
         });
         
-        getChildren().addAll(resetButton, undoButton);
+        getChildren().addAll(resetButton, undoButton, redoButton);
         
     }
 }
