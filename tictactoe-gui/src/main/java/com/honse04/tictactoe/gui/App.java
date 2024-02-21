@@ -17,7 +17,7 @@ public class App extends Application {
         BorderPane mainPane = new BorderPane();
         
         //Setting the grid
-        Grid grid = new Grid(mainPane);
+        Grid grid = new Grid();
         grid.init();
 
         // Right hand side
@@ -28,7 +28,7 @@ public class App extends Application {
         mainPane.setCenter(grid);
         mainPane.setRight(right);
         mainPane.setLeft(left);
-        mainPane.setStyle("-fx-background-color: #F5F5F5;");
+        mainPane.setStyle("-fx-background-color: #2a2a2a;");
         
         Scene scene = new Scene(mainPane, 1100, 700);
         

@@ -20,6 +20,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.BorderPane;
 
@@ -73,7 +74,7 @@ public class Grid extends StackPane {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Button button = new Button("");
-                button.setStyle("-fx-background-color:  #2a2a2a; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;");
+                button.setStyle("-fx-background-color:  #444444; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;");
                 button.setId(String.format("%d,%d",i,j));
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 
@@ -173,25 +174,29 @@ public class Grid extends StackPane {
         
         VBox alert = new VBox();
         alert.setMaxSize(275, 175);
-        alert.setStyle("-fx-background-color: #777777;-fx-background-radius: 10px;");
+        alert.setStyle("-fx-background-color: #777777;-fx-background-radius: 7px;");
         alert.setAlignment(Pos.CENTER);
         alert.setOpacity(0);
-         
+        alert.setSpacing(10);
+        
+        Label winner = new Label(this.turnNumber%2 != 0 ? "O Wins!" : "X Wins!"); 
         Button reset = new Button("Play again");
         reset.setOnAction((ActionEvent e) -> {
             reset();
             getChildren().remove(alert);
             grid.setEffect(null);
         });
-        
-         
-        // changes to the blurring area, and scaling/opacity for the animatio
+                 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(alert.opacityProperty(),0)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(alert.opacityProperty(), 1))
+                new KeyFrame(Duration.ZERO, new KeyValue(alert.opacityProperty(),0.75),
+                new KeyValue(alert.scaleXProperty(),0.9),
+                new KeyValue(alert.scaleYProperty(), 0.9)),
+                new KeyFrame(Duration.seconds(0.05), new KeyValue(alert.opacityProperty(), 1),
+                new KeyValue(alert.scaleXProperty(),1),
+                new KeyValue(alert.scaleYProperty(), 1))
         );
         
-        alert.getChildren().add(reset);
+        alert.getChildren().addAll(winner, reset);
         getChildren().add(alert);
         timeline.play();
     }
@@ -235,8 +240,7 @@ public class Grid extends StackPane {
             }                    
         }
         gameData.setSize(-1);
-        String toPut = this.turnNumber%2 != 0 ? "X" : "O";
-        RightPane.changeText(toPut);
+        RightPane.changeText(this.turnNumber%2 != 0 ? "X" : "O");
              
     }
     
@@ -264,9 +268,8 @@ public class Grid extends StackPane {
             }
         }
         turnNumber++;
-        gameData.setSize(1);
-        String toPut = this.turnNumber%2 != 0 ? "X" : "O";
-        RightPane.changeText(toPut);
+        gameData.setSize(1); 
+        RightPane.changeText(this.turnNumber%2 != 0 ? "X" : "O");
         
     }
 }

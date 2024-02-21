@@ -21,6 +21,8 @@ public class LeftPane extends VBox{
         this.mainGrid = grid;
         setPrefWidth(250);
         
+        VBox card = new Card();
+        
         Button resetButton = new Button("Reset");
         resetButton.setOnAction((ActionEvent e) -> {
             mainGrid.reset();
@@ -36,7 +38,9 @@ public class LeftPane extends VBox{
             mainGrid.redo();
         });
         
-        getChildren().addAll(resetButton, undoButton, redoButton);
+        card.getChildren().addAll(resetButton, undoButton, redoButton);
+        
+        getChildren().add(card);
         
     }
 }

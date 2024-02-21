@@ -21,27 +21,23 @@ public class RightPane extends VBox {
         setPrefWidth(250);
         setSpacing(2);
         setAlignment(Pos.CENTER);
-           
-        Label turnLabel = new Label("   Current Turn   ");
-        turnLabel.setFont(new Font("Calibri", 30));
-        turnLabel.setStyle("-fx-text-fill: black;"
-                + " -fx-background-color: #F3F8FF; -fx-font-family: Calibri;"
-                + " -fx-background-radius: 10px; -fx-effect: dropshadow(three-pass-box, black, 10, 0.5, 1, 1);" );
         
+        VBox card = new Card();
         
+        Label turnLabel = new Label("Current Turn");
+        turnLabel.setAlignment(Pos.CENTER);
+        turnLabel.setFont(new Font("Arial", 24));
+        turnLabel.setStyle("-fx-text-fill: #E0E0E0;");
+               
         Label turn = new Label("X");
         RightPane.MainLabel = turn;
-        turn.setMinWidth(190);
         turn.setAlignment(Pos.CENTER);
-        turn.setFont(new Font("Arial", 70));
-        turn.setStyle("-fx-text-fill: black; -fx-background-color: #F3F8FF; -fx-background-radius: 10px;"
-                + " -fx-effect: dropshadow(three-pass-box, black, 10, 0.5, 1, 1);");
+        turn.setFont(new Font("Arial", 60));
+        turn.setStyle("-fx-text-fill: #E0E0E0;");
         
-        //Vertical Spacing
-        VBox spacing = new VBox();
-        spacing.setPrefHeight(250);
+        card.getChildren().addAll(turnLabel, turn);
         
-        getChildren().addAll(turnLabel, turn);
+        getChildren().addAll(card);
     }
     
     public static void changeText(String text) {
