@@ -15,19 +15,20 @@ public class App extends Application {
     public void start(Stage stage) {
 
         BorderPane mainPane = new BorderPane();
-        
+        BorderPane leftPane = new BorderPane();
         //Setting the grid
-        Grid grid = new Grid();
+        Grid grid = new Grid(leftPane);
         grid.init();
 
         // Right hand side
         RightPane right = new RightPane();
                 
         LeftPane left = new LeftPane(grid);
+        leftPane.setCenter(left);
         
         mainPane.setCenter(grid);
         mainPane.setRight(right);
-        mainPane.setLeft(left);
+        mainPane.setLeft(leftPane);
         mainPane.setStyle("-fx-background-color: #2a2a2a;");
         
         Scene scene = new Scene(mainPane, 1100, 700);

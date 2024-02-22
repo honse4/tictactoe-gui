@@ -6,6 +6,7 @@ package com.honse04.tictactoe.gui;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
@@ -22,6 +23,7 @@ public class LeftPane extends VBox{
         setPrefWidth(250);
         
         VBox card = new Card();
+        card.setSpacing(3);        
         
         Button resetButton = new Button("Reset");
         resetButton.setOnAction((ActionEvent e) -> {
@@ -42,5 +44,16 @@ public class LeftPane extends VBox{
         
         getChildren().add(card);
         
+    }
+    
+    public void disable(boolean disable) {
+        Card card = (Card) getChildren().get(0);
+        for(Node nd : card.getChildren()) {
+            //System.out.println(nd.getClass().getSimpleName());
+            if (nd instanceof Button){
+                Button btn = (Button) nd;
+                btn.setDisable(disable);
+            }
+        }
     }
 }

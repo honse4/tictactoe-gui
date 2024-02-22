@@ -17,6 +17,6 @@ public class Card extends VBox{
         setAlignment(Pos.CENTER);
         setSpacing(1);
         setMaxWidth(235);
-        setStyle("-fx-background-color: #303030; -fx-padding: 14 0 6 0; -fx-background-radius: 10;");
+        setStyle("-fx-background-color: #303030; -fx-padding: 14 0 14 0; -fx-background-radius: 10;");
     }
 }

@@ -55,8 +55,7 @@ public class DoublyLinkedList<T> {
     }
     
     public DoubleNode getTop() {
-        if(top == null || bottom == null){
-            System.out.println("No values in the list");        
+        if(top == null || bottom == null){       
             return null;
         }
         return top;
@@ -71,7 +70,6 @@ public class DoublyLinkedList<T> {
     }
     
     public int getSize() {
-        System.out.println("Size is: " + size);
         return size;
     }
     
@@ -94,16 +92,13 @@ public class DoublyLinkedList<T> {
     
     public void pop() {
         if(top!=null) {
-            System.out.println("Popped: "+ top.getValue());
             top = top.getNext();
             
             if(top != null) {
                 top.setPrevious(null);
             }           
             size--;         
-            return;
         }   
-        System.out.println("No values in the list");
     }
     
     public void pushBack(T val) {

@@ -23,6 +23,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 /**
  *
@@ -35,12 +36,13 @@ public class Grid extends StackPane {
     private boolean isGameOver = false;
     private GridPane grid;
     private final DoublyLinkedList<ArrayList<ArrayList<String>>> gameData;
+    private final BorderPane leftPane;
     
-    public Grid() {  
+    public Grid(BorderPane left) {  
         this.grid = new GridPane();
         this.gameBoard = new ArrayList<>();
         this.gameData = new DoublyLinkedList();
-        
+        this.leftPane = left;
         ArrayList<ArrayList<String>> addBase = new ArrayList<>();
         
         for(int i = 0; i<3; i++) {
@@ -124,8 +126,7 @@ public class Grid extends StackPane {
         
         if(turnNumber>=5){
             checkState();
-        }
-  
+        }  
     }
     
     public void checkState(){
@@ -171,22 +172,49 @@ public class Grid extends StackPane {
     public void gameOver() {
         BoxBlur blur = new BoxBlur(5,5,1);
         grid.setEffect(blur);
+        leftPane.setEffect(blur);
         
-        VBox alert = new VBox();
+        LeftPane left = (LeftPane) leftPane.getChildren().get(0);
+        left.disable(true);
+        
+        BorderPane alert = new BorderPane();
         alert.setMaxSize(275, 175);
-        alert.setStyle("-fx-background-color: #777777;-fx-background-radius: 7px;");
-        alert.setAlignment(Pos.CENTER);
+        alert.setStyle("-fx-background-color: #666666;-fx-background-radius: 7px;");
         alert.setOpacity(0);
-        alert.setSpacing(10);
         
-        Label winner = new Label(this.turnNumber%2 != 0 ? "O Wins!" : "X Wins!"); 
+        Label winner = new Label(this.turnNumber>=10? "Tie!" : this.turnNumber%2 != 0 ? "O Wins!" : "X Wins!"); 
+        winner.setStyle("-fx-font-size: 20px; -fx-text-fill: white");
+        
+        HBox buttonContainer = new HBox();
+        buttonContainer.setSpacing(2);
+        buttonContainer.setAlignment(Pos.CENTER);
+        buttonContainer.setMaxWidth(Double.MAX_VALUE);
+        buttonContainer.setStyle("-fx-background-color: #555555");
+        buttonContainer.setMinHeight(40);
+        
+        //create class for this
         Button reset = new Button("Play again");
         reset.setOnAction((ActionEvent e) -> {
             reset();
             getChildren().remove(alert);
-            grid.setEffect(null);
         });
-                 
+        reset.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-text-fill: white;");
+        reset.setOnMouseEntered(e -> reset.setStyle("-fx-background-color: #888888; -fx-text-fill: white;"));
+        reset.setOnMouseExited(e -> reset.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
+        
+        Button close = new Button("Close");
+        close.setOnAction((ActionEvent e) -> {
+            grid.setEffect(null);
+            leftPane.setEffect(null);
+            getChildren().remove(alert);
+            left.disable(false);
+        });
+        close.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-text-fill: white;");
+        close.setOnMouseEntered(e -> close.setStyle("-fx-background-color: #888888; -fx-text-fill: white;"));
+        close.setOnMouseExited(e -> close.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
+        
+        buttonContainer.getChildren().addAll(reset, close);
+                     
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(alert.opacityProperty(),0.75),
                 new KeyValue(alert.scaleXProperty(),0.9),
@@ -196,7 +224,8 @@ public class Grid extends StackPane {
                 new KeyValue(alert.scaleYProperty(), 1))
         );
         
-        alert.getChildren().addAll(winner, reset);
+        alert.setCenter(winner);
+        alert.setBottom(buttonContainer);
         getChildren().add(alert);
         timeline.play();
     }
@@ -204,7 +233,13 @@ public class Grid extends StackPane {
     public void reset() {
         this.grid = new GridPane();
         init();
-            
+        
+        LeftPane left = (LeftPane) leftPane.getChildren().get(0);
+        left.disable(false);
+                
+        grid.setEffect(null);
+        leftPane.setEffect(null);
+        
         for(int i = 0; i<3; i++) {
             for(int j =0; j<3; j++) {
                gameBoard.get(i).set(j, "");
@@ -223,7 +258,6 @@ public class Grid extends StackPane {
         
         DoublyLinkedList.DoubleNode dn = gameData.getTop().getNext();
         
-        gameData.getList();
         gameData.setTop(dn);
         turnNumber--;
         
@@ -253,7 +287,6 @@ public class Grid extends StackPane {
         }
         
         gameData.setTop(dn);
-        gameData.getList();
         ArrayList<ArrayList<String>> prev = (ArrayList<ArrayList<String>>) dn.getValue();
         
         for(Node nd: grid.getChildren()) {
@@ -269,7 +302,6 @@ public class Grid extends StackPane {
         }
         turnNumber++;
         gameData.setSize(1); 
-        RightPane.changeText(this.turnNumber%2 != 0 ? "X" : "O");
-        
+        RightPane.changeText(this.turnNumber%2 != 0 ? "X" : "O");       
     }
 }
