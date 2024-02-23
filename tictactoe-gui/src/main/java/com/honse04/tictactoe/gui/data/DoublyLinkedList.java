@@ -147,7 +147,6 @@ public class DoublyLinkedList<T> {
     public void clear() {
         int val = size;
         for(int i = 0; i<val-1; i++) {
-            System.out.println(i);
             pop();
         }
         

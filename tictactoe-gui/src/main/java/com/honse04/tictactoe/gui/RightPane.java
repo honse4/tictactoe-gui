@@ -23,7 +23,7 @@ public class RightPane extends VBox {
         setAlignment(Pos.CENTER);
         
         VBox card = new Card();
-        
+           
         Label turnLabel = new Label("Current Turn");
         turnLabel.setAlignment(Pos.CENTER);
         turnLabel.setFont(new Font("Arial", 24));

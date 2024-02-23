@@ -16,18 +16,19 @@ public class App extends Application {
 
         BorderPane mainPane = new BorderPane();
         BorderPane leftPane = new BorderPane();
-        //Setting the grid
-        Grid grid = new Grid(leftPane);
+        BorderPane rightPane = new BorderPane();
+
+        Grid grid = new Grid(leftPane, rightPane);
         grid.init();
 
-        // Right hand side
         RightPane right = new RightPane();
-                
+        rightPane.setCenter(right);
+        
         LeftPane left = new LeftPane(grid);
         leftPane.setCenter(left);
         
         mainPane.setCenter(grid);
-        mainPane.setRight(right);
+        mainPane.setRight(rightPane);
         mainPane.setLeft(leftPane);
         mainPane.setStyle("-fx-background-color: #2a2a2a;");
         

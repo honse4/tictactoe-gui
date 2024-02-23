@@ -4,6 +4,7 @@
  */
 package com.honse04.tictactoe.gui;
 
+import com.honse04.tictactoe.gui.buttons.EndGameButton;
 import com.honse04.tictactoe.gui.data.DoublyLinkedList;
 import javafx.util.Duration;
 import java.util.ArrayList;
@@ -37,12 +38,14 @@ public class Grid extends StackPane {
     private GridPane grid;
     private final DoublyLinkedList<ArrayList<ArrayList<String>>> gameData;
     private final BorderPane leftPane;
+    private final BorderPane rightPane;
     
-    public Grid(BorderPane left) {  
+    public Grid(BorderPane left, BorderPane right) {  
         this.grid = new GridPane();
         this.gameBoard = new ArrayList<>();
         this.gameData = new DoublyLinkedList();
         this.leftPane = left;
+        this.rightPane = right; 
         ArrayList<ArrayList<String>> addBase = new ArrayList<>();
         
         for(int i = 0; i<3; i++) {
@@ -76,12 +79,14 @@ public class Grid extends StackPane {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 Button button = new Button("");
-                button.setStyle("-fx-background-color:  #444444; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;");
+                String style = "-fx-background-color:  #444444; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;";
+                button.setStyle(style);
                 button.setId(String.format("%d,%d",i,j));
                 button.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                button.setOnMouseEntered(e -> button.setStyle("-fx-background-color: #404040; -fx-font-size: 60px; -fx-font-family: Calibri; -fx-text-fill: white;"));
+                button.setOnMouseExited(e -> button.setStyle(style));
                 
                 button.setOnAction((ActionEvent e) -> {
-                    //System.out.println(button.getId());
                     clicked = button;
                     if(!isGameOver) {
                        gameLogic(button.getId()); 
@@ -97,7 +102,6 @@ public class Grid extends StackPane {
     }
     
     public void gameLogic(String id) {
-        System.out.println(id);
         String[] coords = id.split(",");
         int x = Integer.parseInt(coords[0]);
         int y = Integer.parseInt(coords[1]);
@@ -173,6 +177,7 @@ public class Grid extends StackPane {
         BoxBlur blur = new BoxBlur(5,5,1);
         grid.setEffect(blur);
         leftPane.setEffect(blur);
+        rightPane.setEffect(blur);
         
         LeftPane left = (LeftPane) leftPane.getChildren().get(0);
         left.disable(true);
@@ -189,29 +194,24 @@ public class Grid extends StackPane {
         buttonContainer.setSpacing(2);
         buttonContainer.setAlignment(Pos.CENTER);
         buttonContainer.setMaxWidth(Double.MAX_VALUE);
-        buttonContainer.setStyle("-fx-background-color: #555555");
+        buttonContainer.setStyle("-fx-background-color: #3A3A3A;");
         buttonContainer.setMinHeight(40);
         
-        //create class for this
-        Button reset = new Button("Play again");
+        EndGameButton reset = new EndGameButton("Play again");
         reset.setOnAction((ActionEvent e) -> {
             reset();
             getChildren().remove(alert);
         });
-        reset.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-text-fill: white;");
-        reset.setOnMouseEntered(e -> reset.setStyle("-fx-background-color: #888888; -fx-text-fill: white;"));
-        reset.setOnMouseExited(e -> reset.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
         
-        Button close = new Button("Close");
+        EndGameButton close = new EndGameButton("Close");
         close.setOnAction((ActionEvent e) -> {
             grid.setEffect(null);
             leftPane.setEffect(null);
+            rightPane.setEffect(null);
             getChildren().remove(alert);
             left.disable(false);
         });
-        close.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;-fx-text-fill: white;");
-        close.setOnMouseEntered(e -> close.setStyle("-fx-background-color: #888888; -fx-text-fill: white;"));
-        close.setOnMouseExited(e -> close.setStyle("-fx-background-color: transparent; -fx-text-fill: white;"));
+        
         
         buttonContainer.getChildren().addAll(reset, close);
                      
@@ -219,7 +219,7 @@ public class Grid extends StackPane {
                 new KeyFrame(Duration.ZERO, new KeyValue(alert.opacityProperty(),0.75),
                 new KeyValue(alert.scaleXProperty(),0.9),
                 new KeyValue(alert.scaleYProperty(), 0.9)),
-                new KeyFrame(Duration.seconds(0.05), new KeyValue(alert.opacityProperty(), 1),
+                new KeyFrame(Duration.seconds(0.1), new KeyValue(alert.opacityProperty(), 1),
                 new KeyValue(alert.scaleXProperty(),1),
                 new KeyValue(alert.scaleYProperty(), 1))
         );
@@ -239,6 +239,7 @@ public class Grid extends StackPane {
                 
         grid.setEffect(null);
         leftPane.setEffect(null);
+        rightPane.setEffect(null);
         
         for(int i = 0; i<3; i++) {
             for(int j =0; j<3; j++) {

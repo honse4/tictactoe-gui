@@ -4,10 +4,11 @@
  */
 package com.honse04.tictactoe.gui;
 
+import com.honse04.tictactoe.gui.buttons.StateButton;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 /**
@@ -23,24 +24,29 @@ public class LeftPane extends VBox{
         setPrefWidth(250);
         
         VBox card = new Card();
-        card.setSpacing(3);        
+        card.setSpacing(10);     
         
-        Button resetButton = new Button("Reset");
+         HBox bottom = new HBox();
+        bottom.setSpacing(3);
+        bottom.setAlignment(Pos.CENTER);
+        
+        StateButton resetButton = new StateButton("Reset");
         resetButton.setOnAction((ActionEvent e) -> {
             mainGrid.reset();
         });
         
-        Button undoButton = new Button("Undo");
+        StateButton undoButton = new StateButton("Undo");
         undoButton.setOnAction((ActionEvent e) -> {
             mainGrid.undo();
         });
         
-        Button redoButton = new Button("Redo");
+        StateButton redoButton = new StateButton("Redo");
         redoButton.setOnAction((ActionEvent e) -> {
             mainGrid.redo();
         });
         
-        card.getChildren().addAll(resetButton, undoButton, redoButton);
+        bottom.getChildren().addAll(undoButton, redoButton);      
+        card.getChildren().addAll(resetButton, bottom);
         
         getChildren().add(card);
         
@@ -48,11 +54,16 @@ public class LeftPane extends VBox{
     
     public void disable(boolean disable) {
         Card card = (Card) getChildren().get(0);
-        for(Node nd : card.getChildren()) {
+        StateButton btn = (StateButton) card.getChildren().get(0);
+        btn.setDisable(disable);
+        
+        HBox box = (HBox) card.getChildren().get(1);
+        
+        for(Node nd : box.getChildren()) {
             //System.out.println(nd.getClass().getSimpleName());
-            if (nd instanceof Button){
-                Button btn = (Button) nd;
-                btn.setDisable(disable);
+            if (nd instanceof StateButton){
+                StateButton btns = (StateButton) nd;
+                btns.setDisable(disable);
             }
         }
     }
